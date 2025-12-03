@@ -1,209 +1,173 @@
 import React, { useState, useEffect, useCallback } from 'react';
+import { User, GraduationCap, MapPin, Code, Github, Facebook, Mail } from 'lucide-react';
 
-// Sử dụng Lucide Icons cho các biểu tượng
-// Bạn có thể tìm thêm các icon tại https://lucide.dev/
-const MapPin = (props) => (
-  <svg {...props} xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-map-pin">
-    <path d="M12 17.5a4 4 0 1 0 0-8 4 4 0 0 0 0 8z" />
-    <path d="M12 21.5s-7-5-7-12c0-3.87 3.13-7 7-7s7 3.13 7 7c0 7-7 12-7 12z" />
-  </svg>
-);
-
-const Code = (props) => (
-  <svg {...props} xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-code">
-    <polyline points="16 18 22 12 16 6" />
-    <polyline points="8 6 2 12 8 18" />
-  </svg>
-);
-
-const BookOpen = (props) => (
-  <svg {...props} xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-book-open">
-    <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z" />
-    <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z" />
-  </svg>
-);
-
-
-// Khởi tạo các giá trị mặc định cho trang web
-const DEFAULT_PROFILE_IMAGE = "https://placehold.co/400x400/1e293b/ffffff?text=Avatar";
-const PROFILE_KEY = 'userProfileImage'; // Key để lưu ảnh vào localStorage
+// Dữ liệu cơ bản của sinh viên
+const initialProfile = {
+  name: 'Trần Nguyễn Nguyên Vũ',
+  studentId: 'PK04714',
+  school: 'FPT Polytechnic',
+  city: 'Thành phố Buôn Mê Thuột',
+  defaultImage: 'https://placehold.co/400x400/10b981/ffffff?text=PK04714', // Placeholder image with school color
+};
 
 // Component chính của ứng dụng
 const App = () => {
-  // State quản lý ảnh đại diện
-  const [profileImage, setProfileImage] = useState(DEFAULT_PROFILE_IMAGE);
+  // State để lưu trữ thông tin và URL ảnh đại diện
+  const [profile, setProfile] = useState(initialProfile);
+  const [profileImage, setProfileImage] = useState(profile.defaultImage);
 
-  // Dữ liệu cá nhân
-  const profileData = {
-    name: "Trần Nguyễn Nguyên Vũ",
-    studentId: "PK04714",
-    university: "FPT Polytechnic",
-    city: "Thành phố Buôn Mê Thuật",
-    expertise: "Chuyên gia lập trình Website",
-    bio: "Tôi là sinh viên chuyên ngành Phát triển phần mềm tại FPT Polytechnic, Buôn Ma Thuột. Tôi có niềm đam mê sâu sắc với việc xây dựng các ứng dụng web hiện đại, có tính tương tác cao và thiết kế thân thiện với người dùng (UI/UX). Tôi luôn nỗ lực học hỏi và áp dụng các công nghệ mới nhất để giải quyết các vấn đề thực tế."
-  };
-
-  // Hàm tải ảnh từ localStorage (dùng để giữ ảnh khi tải lại trang)
+  // Khôi phục ảnh từ localStorage nếu có (dành cho demo, nhưng sẽ dùng lại defaultImage do giới hạn môi trường)
+  // Trong ứng dụng thực tế, bạn sẽ dùng Firebase Storage để lưu trữ ảnh
   useEffect(() => {
-    const savedImage = localStorage.getItem(PROFILE_KEY);
-    if (savedImage) {
-      setProfileImage(savedImage);
-    }
+    // Thay vì dùng localStorage, ta sẽ giữ lại logic load ảnh tạm thời khi người dùng chọn.
+    // LƯU Ý: Trong môi trường thực tế, cần sử dụng Firebase Storage để lưu ảnh vĩnh viễn
   }, []);
 
-  // Xử lý khi người dùng chọn file ảnh mới
-  const handleImageChange = useCallback((event) => {
+  /**
+   * Hàm xử lý khi người dùng chọn file ảnh mới.
+   * Chuyển đổi file ảnh thành Data URL (Base64) để hiển thị ngay lập tức.
+   * @param {React.ChangeEvent<HTMLInputElement>} event
+   */
+  const handleImageUpload = (event) => {
     const file = event.target.files[0];
     if (file) {
       const reader = new FileReader();
       reader.onloadend = () => {
-        // Lưu ảnh dưới dạng Base64 string
-        const base64Image = reader.result;
-        setProfileImage(base64Image);
-        localStorage.setItem(PROFILE_KEY, base64Image);
+        // Cập nhật state với Data URL mới
+        setProfileImage(reader.result);
       };
       reader.readAsDataURL(file);
     }
-  }, []);
+  };
 
-  // Component phụ cho phần thông tin chi tiết
-  const DetailCard = ({ icon, title, content }) => (
-    <div className="flex flex-col p-4 bg-white/5 rounded-lg border border-indigo-600/30 shadow-md transition-all duration-300 hover:shadow-xl hover:bg-white/10">
-      <div className="flex items-center space-x-3 mb-2 text-indigo-400">
-        {icon}
-        <h3 className="text-lg font-semibold text-white">{title}</h3>
+  // Thông tin liên hệ mẫu
+  const contactInfo = [
+    { icon: <Mail className="w-5 h-5 text-gray-700 dark:text-gray-300" />, label: 'Email', value: 'vu.pk04714@fpt.edu.vn', href: 'mailto:vu.pk04714@fpt.edu.vn' },
+    { icon: <Github className="w-5 h-5 text-gray-700 dark:text-gray-300" />, label: 'GitHub', value: '@nguyenvu_dev', href: 'https://github.com/yourusername' },
+    { icon: <Facebook className="w-5 h-5 text-gray-700 dark:text-gray-300" />, label: 'Facebook', value: 'Trần Vũ', href: 'https://facebook.com/yourprofile' },
+  ];
+
+  // Component phụ cho mục thông tin
+  const InfoItem = ({ Icon, label, value }) => (
+    <div className="flex items-center space-x-3 p-3 bg-white dark:bg-gray-800 rounded-lg shadow-sm">
+      <Icon className="w-6 h-6 text-emerald-500" />
+      <div>
+        <p className="text-xs font-semibold uppercase text-gray-500 dark:text-gray-400">{label}</p>
+        <p className="text-base font-medium text-gray-900 dark:text-gray-100">{value}</p>
       </div>
-      <p className="text-gray-300">{content}</p>
     </div>
   );
 
   return (
-    <div className="min-h-screen bg-gray-900 text-white p-4 sm:p-8 font-sans">
-      {/* Header và Background Effect */}
-      <div className="absolute inset-0 z-0 opacity-20">
-        <div className="w-96 h-96 bg-indigo-500 rounded-full mix-blend-multiply filter blur-3xl opacity-30 absolute top-10 left-10 animate-blob"></div>
-        <div className="w-96 h-96 bg-purple-500 rounded-full mix-blend-multiply filter blur-3xl opacity-30 absolute bottom-10 right-10 animate-blob animation-delay-2000"></div>
-      </div>
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-900 p-4 sm:p-8 flex items-center justify-center font-inter">
+      <div className="max-w-4xl w-full bg-white dark:bg-gray-800 rounded-3xl shadow-2xl overflow-hidden">
+        {/* Header - Banner Section */}
+        <div className="relative h-40 bg-gradient-to-r from-emerald-500 to-teal-600">
+          <div className="absolute inset-0 bg-pattern opacity-10"></div>
+          <h1 className="p-6 text-2xl font-bold text-white tracking-wider">
+            PK04714 - Portfolio
+          </h1>
+        </div>
 
-      {/* Main Content Card */}
-      <div className="relative z-10 max-w-6xl mx-auto bg-gray-800 backdrop-blur-sm bg-opacity-90 rounded-2xl shadow-2xl p-6 md:p-10 border border-gray-700">
-
-        {/* Profile Header Section */}
-        <div className="flex flex-col md:flex-row items-center md:items-start gap-6 pb-8 border-b border-gray-700">
+        {/* Main Content Area */}
+        <div className="p-4 sm:p-8 -mt-24">
           
-          {/* Avatar Section */}
-          <div className="relative group w-36 h-36 sm:w-48 sm:h-48 flex-shrink-0">
-            {/* Ảnh đại diện */}
-            <img 
-              src={profileImage} 
-              alt="Ảnh đại diện" 
-              className="w-full h-full object-cover rounded-full border-4 border-indigo-600 shadow-lg transition-transform duration-300 group-hover:scale-105"
-              onError={(e) => { e.target.onerror = null; e.target.src = DEFAULT_PROFILE_IMAGE; }}
-            />
-            {/* Nút thay đổi ảnh (Invisible on hover) */}
-            <label 
-              htmlFor="imageUpload" 
-              className="absolute inset-0 bg-black/50 rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 cursor-pointer"
-              title="Nhấn để thay đổi ảnh đại diện"
-            >
-              <span className="text-white text-sm font-medium p-2 bg-indigo-600 rounded-full hover:bg-indigo-700 transition-colors">
-                Chọn Ảnh Mới
-              </span>
-              <input 
-                id="imageUpload" 
-                type="file" 
-                accept="image/*" 
-                className="hidden" 
-                onChange={handleImageChange} 
-              />
-            </label>
-          </div>
+          {/* Profile Picture Card (Left/Top) */}
+          <div className="flex flex-col md:flex-row items-start space-y-6 md:space-y-0 md:space-x-8">
+            <div className="w-full md:w-64 flex flex-col items-center">
+              {/* Image Container */}
+              <div className="w-48 h-48 sm:w-56 sm:h-56 relative -mt-4 bg-white dark:bg-gray-800 p-1 rounded-full shadow-xl ring-4 ring-white dark:ring-gray-800 transition-all duration-300 hover:scale-[1.02]">
+                <img
+                  src={profileImage}
+                  alt="Ảnh đại diện"
+                  className="w-full h-full object-cover rounded-full"
+                  onError={(e) => { e.target.onerror = null; e.target.src = initialProfile.defaultImage; }} // Fallback if image fails to load
+                />
+              </div>
 
-          {/* Text Info Section */}
-          <div className="mt-4 md:mt-2 text-center md:text-left">
-            <h1 className="text-4xl sm:text-5xl font-extrabold text-indigo-400 leading-tight">
-              {profileData.name}
-            </h1>
-            <p className="text-xl sm:text-2xl text-gray-300 mt-1 font-light italic">
-              {profileData.expertise}
-            </p>
-            <div className="mt-3 space-y-1 text-gray-400">
-              <p className="flex items-center justify-center md:justify-start text-lg">
-                <BookOpen className="w-5 h-5 mr-2 text-indigo-500" />
-                {profileData.university}
+              {/* Upload Button */}
+              <label htmlFor="file-upload" className="mt-4 px-4 py-2 bg-emerald-500 text-white text-sm font-semibold rounded-full shadow-md hover:bg-emerald-600 transition-colors duration-200 cursor-pointer flex items-center space-x-2">
+                <Code className="w-4 h-4"/>
+                <span>Tải ảnh mới lên</span>
+              </label>
+              <input
+                id="file-upload"
+                type="file"
+                accept="image/*"
+                onChange={handleImageUpload}
+                className="hidden"
+              />
+
+              {/* Social Media Links (Mobile/Tablet View) */}
+              <div className="md:hidden mt-6 w-full space-y-4">
+                <h2 className="text-xl font-bold text-gray-800 dark:text-white border-b pb-2">Liên hệ</h2>
+                {contactInfo.map((item, index) => (
+                  <a
+                    key={index}
+                    href={item.href}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex items-center space-x-3 p-3 bg-gray-100 dark:bg-gray-700 rounded-lg shadow-sm hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors duration-200"
+                  >
+                    {item.icon}
+                    <span className="text-sm font-medium text-gray-800 dark:text-gray-200 truncate">{item.value}</span>
+                  </a>
+                ))}
+              </div>
+            </div>
+
+            {/* Profile Details (Right/Bottom) */}
+            <div className="flex-1 w-full mt-8 md:mt-0">
+              <h1 className="text-3xl sm:text-4xl font-extrabold text-gray-900 dark:text-white leading-tight">
+                {profile.name}
+              </h1>
+              <p className="text-lg text-emerald-600 dark:text-emerald-400 font-semibold mb-6">
+                Sinh viên FPT Polytechnic - PK04714
               </p>
-              <p className="flex items-center justify-center md:justify-start text-lg">
-                <MapPin className="w-5 h-5 mr-2 text-indigo-500" />
-                {profileData.city}
-              </p>
-              <p className="text-base font-mono">
-                Mã số sinh viên: <span className="text-indigo-300 font-semibold">{profileData.studentId}</span>
-              </p>
+
+              {/* Personal Info Grid */}
+              <div className="space-y-6">
+                <h2 className="text-xl font-bold text-gray-800 dark:text-white border-b pb-2">Thông tin cá nhân</h2>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <InfoItem Icon={User} label="Mã số sinh viên" value={profile.studentId} />
+                  <InfoItem Icon={GraduationCap} label="Trường" value={profile.school} />
+                  <InfoItem Icon={MapPin} label="Nơi học tập" value={profile.city} />
+                  <InfoItem Icon={Code} label="Chuyên ngành" value="Phát triển Website" />
+                </div>
+              </div>
+
+              {/* Contact/Social Media (Desktop View) */}
+              <div className="mt-8 hidden md:block">
+                <h2 className="text-xl font-bold text-gray-800 dark:text-white border-b pb-2">Liên hệ & Mạng xã hội</h2>
+                <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 mt-4">
+                  {contactInfo.map((item, index) => (
+                    <a
+                      key={index}
+                      href={item.href}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="flex items-center space-x-3 p-3 bg-gray-100 dark:bg-gray-700 rounded-lg shadow-sm hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors duration-200"
+                    >
+                      {item.icon}
+                      <span className="text-sm font-medium text-gray-800 dark:text-gray-200 truncate">{item.value}</span>
+                    </a>
+                  ))}
+                </div>
+              </div>
+              
+              {/* About Section */}
+              <div className="mt-8">
+                <h2 className="text-xl font-bold text-gray-800 dark:text-white border-b pb-2">Mục tiêu phát triển</h2>
+                <p className="mt-4 text-gray-600 dark:text-gray-300 leading-relaxed">
+                  Hiện đang là sinh viên chuyên ngành Phát triển Website tại FPT Polytechnic Buôn Mê Thuột. Mục tiêu là trở thành một lập trình viên Full-stack có kiến thức vững chắc về các công nghệ hiện đại như React, Node.js, và nắm bắt tốt các nguyên tắc thiết kế UI/UX để tạo ra các ứng dụng chất lượng cao, thân thiện với người dùng.
+                </p>
+              </div>
             </div>
           </div>
-        </div>
-
-        {/* Main Content (Bio and Details) */}
-        <div className="pt-8">
-          <h2 className="text-2xl font-bold mb-4 border-b border-indigo-600 pb-2 text-indigo-400">
-            Giới Thiệu Bản Thân
-          </h2>
-          <p className="text-gray-300 leading-relaxed text-lg mb-8">
-            {profileData.bio}
-          </p>
-
-          {/* Key Skills/Interests Section */}
-          <h2 className="text-2xl font-bold mb-6 border-b border-indigo-600 pb-2 text-indigo-400">
-            Điểm Mạnh & Dự Định
-          </h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <DetailCard
-              icon={<Code className="w-6 h-6" />}
-              title="Công Nghệ & Lập Trình"
-              content="Thành thạo JavaScript, React, và Tailwind CSS. Có kinh nghiệm xây dựng giao diện người dùng đáp ứng (Responsive Design) và tối ưu hiệu suất."
-            />
-            <DetailCard
-              icon={<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-lightbulb w-6 h-6"><path d="M15 14c.2-.8.8-1.4 1.6-2 .7-.6 1.1-1.4 1.2-2.3 0-.1-.1-2.1-1.2-3.4-.5-.9-1.3-1.6-2.2-2.1-1-.5-2.2-.6-3.4-.4-.8.1-1.5.4-2.2.8-.8.4-1.4.9-1.9 1.5-.6.6-1 1.4-1.1 2.2-.2.8.2 1.7.9 2.3.7.6 1.4 1 2.2 1.2.9.2 1.8.1 2.5-.2"/></svg>}
-              title="Tư Duy Thiết Kế (UI/UX)"
-              content="Luôn chú trọng đến trải nghiệm người dùng, đảm bảo giao diện trực quan, dễ sử dụng và tuân thủ các nguyên tắc thiết kế hiện đại."
-            />
-          </div>
-        </div>
-
-        {/* Footer */}
-        <div className="mt-12 pt-6 border-t border-gray-700 text-center text-gray-500">
-          <p>&copy; {new Date().getFullYear()} PK04714 - Trang giới thiệu cá nhân</p>
         </div>
       </div>
     </div>
   );
 };
-
-// Thêm CSS cho hiệu ứng background "blob"
-const style = document.createElement('style');
-style.innerHTML = `
-  @keyframes blob {
-    0%, 100% {
-      transform: translate(0, 0) scale(1);
-    }
-    33% {
-      transform: translate(30px, -50px) scale(1.1);
-    }
-    66% {
-      transform: translate(-20px, 20px) scale(0.9);
-    }
-  }
-  .animate-blob {
-    animation: blob 7s infinite;
-  }
-  .animation-delay-2000 {
-    animation-delay: 2s;
-  }
-  /* Đảm bảo font Inter được sử dụng nếu có */
-  body {
-    font-family: 'Inter', sans-serif;
-  }
-`;
-document.head.appendChild(style);
 
 export default App;
