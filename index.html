@@ -1,190 +1,209 @@
-<!DOCTYPE html>
-<html lang="vi">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PK04714 - Trần Nguyễn Nguyên Vũ | Portfolio</title>
-    <!-- Tải Tailwind CSS -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Cấu hình Tailwind cho font Inter -->
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    fontFamily: {
-                        sans: ['Inter', 'sans-serif'],
-                    },
-                    colors: {
-                        'primary-dark': '#1e293b', // Slate-800
-                        'accent-blue': '#3b82f6',  // Blue-500
-                        'light-text': '#f1f5f9',   // Slate-100
-                    }
-                }
-            }
-        }
-    </script>
-    <style>
-        /* Đặt font Inter làm mặc định */
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap');
-        
-        /* Hiệu ứng di chuột cho các thẻ */
-        .card-hover:hover {
-            transform: translateY(-4px);
-            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
-        }
-    </style>
-</head>
-<body class="bg-light-text font-sans text-primary-dark antialiased">
+import React, { useState, useEffect, useCallback } from 'react';
 
-    <!-- Thanh điều hướng (Header) -->
-    <header class="bg-primary-dark shadow-lg">
-        <div class="container mx-auto px-4 py-4 flex justify-between items-center">
-            <h1 class="text-xl font-bold text-accent-blue tracking-wider">VŨ.DEV</h1>
-            <nav>
-                <a href="#about" class="text-light-text hover:text-accent-blue transition duration-300 mx-2 md:mx-4 text-sm font-medium">Giới Thiệu</a>
-                <a href="#projects" class="text-light-text hover:text-accent-blue transition duration-300 mx-2 md:mx-4 text-sm font-medium">Dự Án</a>
-                <a href="#contact" class="text-light-text hover:text-accent-blue transition duration-300 mx-2 md:mx-4 text-sm font-medium">Liên Hệ</a>
-            </nav>
-        </div>
-    </header>
+// Sử dụng Lucide Icons cho các biểu tượng
+// Bạn có thể tìm thêm các icon tại https://lucide.dev/
+const MapPin = (props) => (
+  <svg {...props} xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-map-pin">
+    <path d="M12 17.5a4 4 0 1 0 0-8 4 4 0 0 0 0 8z" />
+    <path d="M12 21.5s-7-5-7-12c0-3.87 3.13-7 7-7s7 3.13 7 7c0 7-7 12-7 12z" />
+  </svg>
+);
 
-    <!-- Khu vực giới thiệu chính (Hero Section) -->
-    <main class="container mx-auto px-4 py-16 md:py-24">
-        <section id="hero" class="flex flex-col md:flex-row items-center justify-center space-y-12 md:space-y-0 md:space-x-16 bg-white p-8 md:p-12 rounded-2xl shadow-xl">
-            
-            <!-- Hình ảnh Profile -->
-            <div class="flex-shrink-0 w-48 h-48 md:w-64 md:h-64 rounded-full overflow-hidden border-4 border-accent-blue shadow-lg">
-                <!-- Sử dụng placeholder an toàn, bạn có thể thay bằng ảnh thật -->
-                <img 
-                    src="https://placehold.co/600x600/3b82f6/FFFFFF?text=PROFILE+IMAGE" 
-                    alt="Hình ảnh Profile của Trần Nguyễn Nguyên Vũ" 
-                    class="w-full h-full object-cover"
-                >
-            </div>
+const Code = (props) => (
+  <svg {...props} xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-code">
+    <polyline points="16 18 22 12 16 6" />
+    <polyline points="8 6 2 12 8 18" />
+  </svg>
+);
 
-            <!-- Thông tin chính -->
-            <div class="text-center md:text-left">
-                <p class="text-lg font-medium text-accent-blue mb-2">Xin chào, tôi là</p>
-                <h2 class="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-primary-dark leading-tight">
-                    TRẦN NGUYỄN <br class="hidden md:block"> NGUYÊN VŨ
-                </h2>
-                <p class="mt-4 text-xl sm:text-2xl font-light text-gray-600">
-                    Chuyên gia phát triển Website &amp; UI/UX
-                </p>
-                <div class="mt-8 space-y-2 text-md text-gray-700">
-                    <p class="flex items-center justify-center md:justify-start">
-                        <!-- Icon sinh viên (dùng SVG) -->
-                        <svg class="w-5 h-5 mr-2 text-accent-blue" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M10.394 2.08a1 1 0 00-.788 0L3.18 5.485A1 1 0 003 6.307V15.5a1 1 0 001 1h12a1 1 0 001-1V6.307a1 1 0 00-.22-.822l-6.426-3.406zM12 11a2 2 0 100 4 2 2 0 000-4z"/></svg>
-                        Sinh viên FPT Polytechnic Buôn Mê Thuật
-                    </p>
-                    <p class="flex items-center justify-center md:justify-start">
-                        <!-- Icon mã số (dùng SVG) -->
-                        <svg class="w-5 h-5 mr-2 text-accent-blue" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M6 2a2 2 0 00-2 2v12a2 2 0 002 2h8a2 2 0 002-2V4a2 2 0 00-2-2H6zm3 2a1 1 0 00-1 1v1h2V5a1 1 0 00-1-1zm3 10H8v-2h4v2zm0-4H8V8h4v2z" clip-rule="evenodd"/></svg>
-                        Mã số sinh viên: <span class="ml-1 font-semibold">PK04714</span>
-                    </p>
-                </div>
+const BookOpen = (props) => (
+  <svg {...props} xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-book-open">
+    <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z" />
+    <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z" />
+  </svg>
+);
 
-                <div class="mt-10 flex flex-col sm:flex-row justify-center md:justify-start space-y-4 sm:space-y-0 sm:space-x-4">
-                    <a href="#projects" class="px-6 py-3 bg-accent-blue text-white font-semibold rounded-lg shadow-md hover:bg-blue-600 transition duration-300 transform hover:scale-105">
-                        Xem Dự Án
-                    </a>
-                    <a href="#contact" class="px-6 py-3 border border-accent-blue text-accent-blue font-semibold rounded-lg shadow-md hover:bg-blue-50 transition duration-300 transform hover:scale-105">
-                        Liên Hệ Ngay
-                    </a>
-                </div>
-            </div>
-        </section>
 
-        <!-- Giới thiệu ngắn (About Section) -->
-        <section id="about" class="mt-20">
-            <h3 class="text-3xl font-bold text-center text-primary-dark mb-10">Về Tôi</h3>
-            <div class="max-w-4xl mx-auto bg-white p-8 rounded-2xl shadow-lg border-t-4 border-accent-blue">
-                <p class="text-lg text-gray-700 leading-relaxed text-center">
-                    Tôi là một sinh viên năm cuối chuyên ngành Phát triển phần mềm tại trường FPT Polytechnic, Buôn Mê Thuật, với niềm đam mê sâu sắc trong việc xây dựng các trang web không chỉ hoạt động hiệu quả mà còn có trải nghiệm người dùng (UX) tuyệt vời. Với mã số PK04714, tôi luôn tìm kiếm những cơ hội để áp dụng kiến thức về công nghệ front-end hiện đại và thiết kế đáp ứng (responsive design) vào các dự án thực tế.
-                </p>
-                <div class="mt-8 grid grid-cols-1 md:grid-cols-3 gap-6 text-center">
-                    <div class="p-4 bg-gray-50 rounded-lg card-hover transition duration-300">
-                        <p class="text-2xl font-bold text-accent-blue">HTML/CSS</p>
-                        <p class="text-sm text-gray-500">Nền tảng vững chắc</p>
-                    </div>
-                    <div class="p-4 bg-gray-50 rounded-lg card-hover transition duration-300">
-                        <p class="text-2xl font-bold text-accent-blue">JavaScript</p>
-                        <p class="text-sm text-gray-500">Lập trình tương tác</p>
-                    </div>
-                    <div class="p-4 bg-gray-50 rounded-lg card-hover transition duration-300">
-                        <p class="text-2xl font-bold text-accent-blue">Responsive Design</p>
-                        <p class="text-sm text-gray-500">UI/UX đa thiết bị</p>
-                    </div>
-                </div>
-            </div>
-        </section>
+// Khởi tạo các giá trị mặc định cho trang web
+const DEFAULT_PROFILE_IMAGE = "https://placehold.co/400x400/1e293b/ffffff?text=Avatar";
+const PROFILE_KEY = 'userProfileImage'; // Key để lưu ảnh vào localStorage
 
-        <!-- Khu vực Dự án (Mockup Projects) -->
-        <section id="projects" class="mt-20">
-            <h3 class="text-3xl font-bold text-center text-primary-dark mb-10">Các Dự Án Tiêu Biểu</h3>
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                
-                <!-- Dự án 1 -->
-                <div class="bg-white p-6 rounded-xl shadow-lg border border-gray-200 card-hover transition duration-300">
-                    <h4 class="text-xl font-semibold text-primary-dark mb-2">Ứng dụng quản lý công việc</h4>
-                    <p class="text-gray-600 text-sm mb-4">Sử dụng React và Tailwind CSS. Đảm bảo tính năng kéo thả và đồng bộ hóa đám mây.</p>
-                    <span class="inline-block bg-accent-blue text-white text-xs px-3 py-1 rounded-full">Web App</span>
-                </div>
+// Component chính của ứng dụng
+const App = () => {
+  // State quản lý ảnh đại diện
+  const [profileImage, setProfileImage] = useState(DEFAULT_PROFILE_IMAGE);
 
-                <!-- Dự án 2 -->
-                <div class="bg-white p-6 rounded-xl shadow-lg border border-gray-200 card-hover transition duration-300">
-                    <h4 class="text-xl font-semibold text-primary-dark mb-2">Trang bán hàng thời trang</h4>
-                    <p class="text-gray-600 text-sm mb-4">Xây dựng giao diện thương mại điện tử responsive, tối ưu hóa cho di động.</p>
-                    <span class="inline-block bg-accent-blue text-white text-xs px-3 py-1 rounded-full">E-commerce UI</span>
-                </div>
+  // Dữ liệu cá nhân
+  const profileData = {
+    name: "Trần Nguyễn Nguyên Vũ",
+    studentId: "PK04714",
+    university: "FPT Polytechnic",
+    city: "Thành phố Buôn Mê Thuật",
+    expertise: "Chuyên gia lập trình Website",
+    bio: "Tôi là sinh viên chuyên ngành Phát triển phần mềm tại FPT Polytechnic, Buôn Ma Thuột. Tôi có niềm đam mê sâu sắc với việc xây dựng các ứng dụng web hiện đại, có tính tương tác cao và thiết kế thân thiện với người dùng (UI/UX). Tôi luôn nỗ lực học hỏi và áp dụng các công nghệ mới nhất để giải quyết các vấn đề thực tế."
+  };
 
-                <!-- Dự án 3 -->
-                <div class="bg-white p-6 rounded-xl shadow-lg border border-gray-200 card-hover transition duration-300">
-                    <h4 class="text-xl font-semibold text-primary-dark mb-2">Hệ thống blog cá nhân</h4>
-                    <p class="text-gray-600 text-sm mb-4">Thiết kế tối giản, tập trung vào khả năng đọc và tốc độ tải trang cao.</p>
-                    <span class="inline-block bg-accent-blue text-white text-xs px-3 py-1 rounded-full">Blog Platform</span>
-                </div>
+  // Hàm tải ảnh từ localStorage (dùng để giữ ảnh khi tải lại trang)
+  useEffect(() => {
+    const savedImage = localStorage.getItem(PROFILE_KEY);
+    if (savedImage) {
+      setProfileImage(savedImage);
+    }
+  }, []);
 
-            </div>
-        </section>
+  // Xử lý khi người dùng chọn file ảnh mới
+  const handleImageChange = useCallback((event) => {
+    const file = event.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        // Lưu ảnh dưới dạng Base64 string
+        const base64Image = reader.result;
+        setProfileImage(base64Image);
+        localStorage.setItem(PROFILE_KEY, base64Image);
+      };
+      reader.readAsDataURL(file);
+    }
+  }, []);
 
-    </main>
+  // Component phụ cho phần thông tin chi tiết
+  const DetailCard = ({ icon, title, content }) => (
+    <div className="flex flex-col p-4 bg-white/5 rounded-lg border border-indigo-600/30 shadow-md transition-all duration-300 hover:shadow-xl hover:bg-white/10">
+      <div className="flex items-center space-x-3 mb-2 text-indigo-400">
+        {icon}
+        <h3 className="text-lg font-semibold text-white">{title}</h3>
+      </div>
+      <p className="text-gray-300">{content}</p>
+    </div>
+  );
 
-    <!-- Footer và Liên hệ -->
-    <footer id="contact" class="bg-primary-dark mt-20 py-12">
-        <div class="container mx-auto px-4 text-center">
-            <h3 class="text-2xl font-bold text-light-text mb-6">Liên Hệ Với Tôi</h3>
-            <p class="text-light-text text-lg mb-4">Bạn có thể tìm thấy tôi tại:</p>
-            
-            <div class="flex flex-col items-center space-y-2 text-gray-300 text-sm md:text-base">
-                <p>
-                    <!-- Icon vị trí -->
-                    <svg class="w-5 h-5 inline mr-2 text-accent-blue" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z" clip-rule="evenodd"/></svg>
-                    <span class="font-medium text-light-text">Địa chỉ:</span> Thành phố Buôn Mê Thuật, Đắk Lắk
-                </p>
-                <p>
-                    <!-- Icon email -->
-                    <svg class="w-5 h-5 inline mr-2 text-accent-blue" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M2.003 5.884L10 9.882l7.997-3.998A2 2 0 0016 4H4a2 2 0 00-1.997 1.884z"/><path d="M18 8.118l-8 4-8-4V14a2 2 0 002 2h12a2 2 0 002-2V8.118z"/></svg>
-                    <span class="font-medium text-light-text">Email:</span> vutnnn.pk04714@fpt.edu.vn (Mô phỏng)
-                </p>
-            </div>
+  return (
+    <div className="min-h-screen bg-gray-900 text-white p-4 sm:p-8 font-sans">
+      {/* Header và Background Effect */}
+      <div className="absolute inset-0 z-0 opacity-20">
+        <div className="w-96 h-96 bg-indigo-500 rounded-full mix-blend-multiply filter blur-3xl opacity-30 absolute top-10 left-10 animate-blob"></div>
+        <div className="w-96 h-96 bg-purple-500 rounded-full mix-blend-multiply filter blur-3xl opacity-30 absolute bottom-10 right-10 animate-blob animation-delay-2000"></div>
+      </div>
 
-            <p class="mt-8 text-gray-500 text-sm">
-                &copy; 2025 Trần Nguyễn Nguyên Vũ | Powered by FPT Polytechnic
+      {/* Main Content Card */}
+      <div className="relative z-10 max-w-6xl mx-auto bg-gray-800 backdrop-blur-sm bg-opacity-90 rounded-2xl shadow-2xl p-6 md:p-10 border border-gray-700">
+
+        {/* Profile Header Section */}
+        <div className="flex flex-col md:flex-row items-center md:items-start gap-6 pb-8 border-b border-gray-700">
+          
+          {/* Avatar Section */}
+          <div className="relative group w-36 h-36 sm:w-48 sm:h-48 flex-shrink-0">
+            {/* Ảnh đại diện */}
+            <img 
+              src={profileImage} 
+              alt="Ảnh đại diện" 
+              className="w-full h-full object-cover rounded-full border-4 border-indigo-600 shadow-lg transition-transform duration-300 group-hover:scale-105"
+              onError={(e) => { e.target.onerror = null; e.target.src = DEFAULT_PROFILE_IMAGE; }}
+            />
+            {/* Nút thay đổi ảnh (Invisible on hover) */}
+            <label 
+              htmlFor="imageUpload" 
+              className="absolute inset-0 bg-black/50 rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 cursor-pointer"
+              title="Nhấn để thay đổi ảnh đại diện"
+            >
+              <span className="text-white text-sm font-medium p-2 bg-indigo-600 rounded-full hover:bg-indigo-700 transition-colors">
+                Chọn Ảnh Mới
+              </span>
+              <input 
+                id="imageUpload" 
+                type="file" 
+                accept="image/*" 
+                className="hidden" 
+                onChange={handleImageChange} 
+              />
+            </label>
+          </div>
+
+          {/* Text Info Section */}
+          <div className="mt-4 md:mt-2 text-center md:text-left">
+            <h1 className="text-4xl sm:text-5xl font-extrabold text-indigo-400 leading-tight">
+              {profileData.name}
+            </h1>
+            <p className="text-xl sm:text-2xl text-gray-300 mt-1 font-light italic">
+              {profileData.expertise}
             </p>
+            <div className="mt-3 space-y-1 text-gray-400">
+              <p className="flex items-center justify-center md:justify-start text-lg">
+                <BookOpen className="w-5 h-5 mr-2 text-indigo-500" />
+                {profileData.university}
+              </p>
+              <p className="flex items-center justify-center md:justify-start text-lg">
+                <MapPin className="w-5 h-5 mr-2 text-indigo-500" />
+                {profileData.city}
+              </p>
+              <p className="text-base font-mono">
+                Mã số sinh viên: <span className="text-indigo-300 font-semibold">{profileData.studentId}</span>
+              </p>
+            </div>
+          </div>
         </div>
-    </footer>
 
-    <script>
-        // JavaScript cơ bản để làm mịn cuộn trang khi click vào liên kết neo (smooth scroll)
-        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-            anchor.addEventListener('click', function (e) {
-                e.preventDefault();
-                document.querySelector(this.getAttribute('href')).scrollIntoView({
-                    behavior: 'smooth'
-                });
-            });
-        });
-    </script>
-</body>
-</html>
+        {/* Main Content (Bio and Details) */}
+        <div className="pt-8">
+          <h2 className="text-2xl font-bold mb-4 border-b border-indigo-600 pb-2 text-indigo-400">
+            Giới Thiệu Bản Thân
+          </h2>
+          <p className="text-gray-300 leading-relaxed text-lg mb-8">
+            {profileData.bio}
+          </p>
+
+          {/* Key Skills/Interests Section */}
+          <h2 className="text-2xl font-bold mb-6 border-b border-indigo-600 pb-2 text-indigo-400">
+            Điểm Mạnh & Dự Định
+          </h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <DetailCard
+              icon={<Code className="w-6 h-6" />}
+              title="Công Nghệ & Lập Trình"
+              content="Thành thạo JavaScript, React, và Tailwind CSS. Có kinh nghiệm xây dựng giao diện người dùng đáp ứng (Responsive Design) và tối ưu hiệu suất."
+            />
+            <DetailCard
+              icon={<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-lightbulb w-6 h-6"><path d="M15 14c.2-.8.8-1.4 1.6-2 .7-.6 1.1-1.4 1.2-2.3 0-.1-.1-2.1-1.2-3.4-.5-.9-1.3-1.6-2.2-2.1-1-.5-2.2-.6-3.4-.4-.8.1-1.5.4-2.2.8-.8.4-1.4.9-1.9 1.5-.6.6-1 1.4-1.1 2.2-.2.8.2 1.7.9 2.3.7.6 1.4 1 2.2 1.2.9.2 1.8.1 2.5-.2"/></svg>}
+              title="Tư Duy Thiết Kế (UI/UX)"
+              content="Luôn chú trọng đến trải nghiệm người dùng, đảm bảo giao diện trực quan, dễ sử dụng và tuân thủ các nguyên tắc thiết kế hiện đại."
+            />
+          </div>
+        </div>
+
+        {/* Footer */}
+        <div className="mt-12 pt-6 border-t border-gray-700 text-center text-gray-500">
+          <p>&copy; {new Date().getFullYear()} PK04714 - Trang giới thiệu cá nhân</p>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+// Thêm CSS cho hiệu ứng background "blob"
+const style = document.createElement('style');
+style.innerHTML = `
+  @keyframes blob {
+    0%, 100% {
+      transform: translate(0, 0) scale(1);
+    }
+    33% {
+      transform: translate(30px, -50px) scale(1.1);
+    }
+    66% {
+      transform: translate(-20px, 20px) scale(0.9);
+    }
+  }
+  .animate-blob {
+    animation: blob 7s infinite;
+  }
+  .animation-delay-2000 {
+    animation-delay: 2s;
+  }
+  /* Đảm bảo font Inter được sử dụng nếu có */
+  body {
+    font-family: 'Inter', sans-serif;
+  }
+`;
+document.head.appendChild(style);
+
+export default App;
