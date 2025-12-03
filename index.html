@@ -1,147 +1,157 @@
-import React from 'react';
-import { Mail, Phone, MapPin, Briefcase, GraduationCap, Code } from 'lucide-react';
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trần Nguyễn Nguyên Vũ - Chuyên gia Lập trình</title>
+    <!-- Tải Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Cấu hình Font và Màu sắc -->
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap');
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f7f9fb; /* Màu nền nhẹ nhàng */
+        }
+        .profile-card {
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+            transition: transform 0.3s ease;
+        }
+        .profile-card:hover {
+            transform: translateY(-5px);
+        }
+        .skill-tag {
+            background-color: #e0f2fe; /* Màu xanh nhạt */
+            color: #0c4a6e; /* Màu chữ xanh đậm */
+        }
+    </style>
+</head>
+<body class="text-gray-800">
 
-// Define the main App component
-const App = () => {
-  // Static data for the profile
-  const profileData = {
-    name: "Trần Nguyễn Nguyên Vũ",
-    studentId: "PK04714",
-    school: "FPT Polytechnic",
-    location: "Thành phố Buôn Mê Thuật",
-    title: "Chuyên gia Phát triển Website (Web Developer)",
-    motto: "Học hỏi không ngừng, sáng tạo không giới hạn.",
-    image: "https://placehold.co/200x200/4c4c4c/ffffff?text=AVATAR", // Placeholder image
-    skills: [
-      { name: "ReactJS", icon: <Code className="w-5 h-5 text-sky-400" /> },
-      { name: "Tailwind CSS", icon: <Code className="w-5 h-5 text-teal-400" /> },
-      { name: "HTML & CSS", icon: <Code className="w-5 h-5 text-orange-400" /> },
-      { name: "JavaScript", icon: <Code className="w-5 h-5 text-yellow-400" /> },
-      { name: "UI/UX Design", icon: <Briefcase className="w-5 h-5 text-pink-400" /> },
-    ],
-    contact: {
-      email: "tranquyennguyenvu@example.com",
-      phone: "+84 123 456 789",
-    }
-  };
+    <div id="app" class="max-w-6xl mx-auto p-4 sm:p-6 lg:p-8">
 
-  // Utility function for responsive icons (Optional, but good for style)
-  const IconText = ({ icon, text }) => (
-    <div className="flex items-center text-sm sm:text-base text-gray-300">
-      <div className="mr-3 p-2 bg-gray-700/50 rounded-full flex-shrink-0">
-        {icon}
-      </div>
-      <span>{text}</span>
-    </div>
-  );
+        <!-- Phần Header và Tiêu đề -->
+        <header class="text-center py-10 bg-white rounded-xl mb-8 profile-card">
+            <h1 class="text-4xl sm:text-5xl font-extrabold text-blue-600 mb-2">Trần Nguyễn Nguyên Vũ</h1>
+            <p class="text-xl text-gray-600">Chuyên gia Phát triển Website (Web Developer)</p>
+        </header>
 
-  return (
-    <div className="min-h-screen bg-gray-900 flex items-center justify-center p-4 sm:p-8">
-      {/* Main Profile Card Container */}
-      <div className="w-full max-w-4xl bg-gray-800 shadow-2xl rounded-xl overflow-hidden transform transition duration-500 hover:scale-[1.01]">
-        
-        {/* Header Section (Banner/Background) */}
-        <div className="relative h-40 bg-gradient-to-r from-blue-700 to-teal-500">
-          <div className="absolute inset-0 bg-black opacity-30"></div>
-          {/* Motto/Quote */}
-          <div className="absolute bottom-4 left-4 text-white text-lg font-semibold italic p-2 rounded-lg">
-            "{profileData.motto}"
-          </div>
-        </div>
-
-        {/* Profile Content Section */}
-        <div className="p-6 sm:p-8 pt-0">
-          
-          {/* Avatar and Main Info */}
-          <div className="flex flex-col md:flex-row items-center md:items-start -mt-20 md:-mt-16">
-            {/* Avatar */}
-            <img
-              src={profileData.image}
-              alt="Ảnh Profile"
-              className="w-32 h-32 object-cover rounded-full border-4 border-gray-800 shadow-xl mb-4 md:mb-0 md:mr-6 transition duration-300 hover:border-teal-400"
-              onError={(e) => { e.target.onerror = null; e.target.src = "https://placehold.co/200x200/4c4c4c/ffffff?text=AVATAR+ERR"; }}
-            />
-
-            {/* Name and Title */}
-            <div className="text-center md:text-left pt-4 md:pt-0">
-              <h1 className="text-4xl sm:text-5xl font-extrabold text-white tracking-tight">
-                {profileData.name}
-              </h1>
-              <p className="text-xl sm:text-2xl text-teal-400 font-light mt-1">
-                {profileData.title}
-              </p>
-            </div>
-          </div>
-
-          {/* Details Grid (Responsive Layout) */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-8 border-t border-gray-700 pt-6">
+        <!-- Phần Giới thiệu Bản thân -->
+        <section class="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-12">
             
-            {/* Column 1: Core Details */}
-            <div className="md:col-span-1 space-y-4">
-              <h2 className="text-xl font-bold text-white mb-4 border-b border-gray-700 pb-2">
-                Thông Tin Cơ Bản
-              </h2>
-              <IconText
-                icon={<GraduationCap className="w-5 h-5 text-amber-400" />}
-                text={`Trường: ${profileData.school}`}
-              />
-              <IconText
-                icon={<MapPin className="w-5 h-5 text-red-400" />}
-                text={`Địa điểm: ${profileData.location}`}
-              />
-              <IconText
-                icon={<Briefcase className="w-5 h-5 text-blue-400" />}
-                text={`MSSV: ${profileData.studentId}`}
-              />
+            <!-- Cột 1: Thẻ Profile Chính -->
+            <div class="lg:col-span-1 bg-white p-6 rounded-xl profile-card flex flex-col items-center text-center">
+                <!-- Ảnh Profile Placeholder -->
+                <img id="profile-img" 
+                     src="https://placehold.co/200x200/4F46E5/ffffff?text=V%C5%A8" 
+                     onerror="this.onerror=null;this.src='https://placehold.co/200x200/4F46E5/ffffff?text=PROFILE';"
+                     alt="Ảnh Profile của Trần Nguyễn Nguyên Vũ" 
+                     class="w-48 h-48 object-cover rounded-full border-4 border-blue-500 mb-6">
+                
+                <h2 class="text-3xl font-bold mb-3 text-gray-900">Thông Tin Cơ Bản</h2>
+                
+                <div class="space-y-2 text-left w-full max-w-xs">
+                    <p class="text-lg">
+                        <span class="font-semibold text-blue-500">MSSV:</span> PK04714
+                    </p>
+                    <p class="text-lg">
+                        <span class="font-semibold text-blue-500">Trường:</span> FPT Polytechnic
+                    </p>
+                    <p class="text-lg">
+                        <span class="font-semibold text-blue-500">Địa điểm:</span> TP. Buôn Mê Thuật
+                    </p>
+                </div>
+
+                <a href="mailto:vu.pk04714@example.com" class="mt-6 w-full max-w-xs py-3 px-4 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 transition duration-300 shadow-md">
+                    Liên hệ qua Email
+                </a>
             </div>
 
-            {/* Column 2: Contact Info */}
-            <div className="md:col-span-1 space-y-4">
-              <h2 className="text-xl font-bold text-white mb-4 border-b border-gray-700 pb-2">
-                Liên Hệ
-              </h2>
-              <IconText
-                icon={<Mail className="w-5 h-5 text-indigo-400" />}
-                text={profileData.contact.email}
-              />
-              <IconText
-                icon={<Phone className="w-5 h-5 text-green-400" />}
-                text={profileData.contact.phone}
-              />
-              <p className="text-sm text-gray-500 pt-2">
-                Hãy liên hệ để thảo luận về các dự án hợp tác.
-              </p>
+            <!-- Cột 2 & 3: Giới thiệu và Kinh nghiệm -->
+            <div class="lg:col-span-2 space-y-8">
+                <!-- Giới thiệu về bản thân -->
+                <div class="bg-white p-6 rounded-xl profile-card">
+                    <h2 class="text-3xl font-bold text-gray-900 mb-4 border-b pb-2 border-blue-200">Giới Thiệu</h2>
+                    <p class="text-lg leading-relaxed text-gray-700">
+                        Tôi là **Trần Nguyễn Nguyên Vũ**, sinh viên chuyên ngành Phát triển Phần mềm tại FPT Polytechnic, Buôn Mê Thuật. Với niềm đam mê mãnh liệt với công nghệ và lập trình, tôi tập trung vào việc xây dựng các giải pháp website hiệu quả, thẩm mỹ và tối ưu hóa trải nghiệm người dùng. Tôi luôn sẵn sàng học hỏi các công nghệ mới và áp dụng chúng vào thực tế.
+                    </p>
+                </div>
+
+                <!-- Kinh nghiệm (Placeholder) -->
+                <div class="bg-white p-6 rounded-xl profile-card">
+                    <h2 class="text-3xl font-bold text-gray-900 mb-4 border-b pb-2 border-blue-200">Mục Tiêu</h2>
+                    <ul class="list-disc list-inside space-y-3 text-gray-700 text-lg">
+                        <li>Trở thành Full-stack Developer chuyên nghiệp.</li>
+                        <li>Đóng góp vào các dự án lớn, có ý nghĩa.</li>
+                        <li>Hoàn thành xuất sắc chương trình học tại FPT Polytechnic.</li>
+                    </ul>
+                </div>
             </div>
 
-            {/* Column 3: Skills/Expertise */}
-            <div className="md:col-span-1">
-              <h2 className="text-xl font-bold text-white mb-4 border-b border-gray-700 pb-2">
-                Kỹ Năng Nổi Bật
-              </h2>
-              <div className="flex flex-wrap gap-2">
-                {profileData.skills.map((skill, index) => (
-                  <span
-                    key={index}
-                    className="flex items-center bg-gray-700 text-teal-300 text-xs font-medium px-3 py-1.5 rounded-full shadow-md hover:bg-teal-700 hover:text-white transition duration-300 cursor-default"
-                  >
-                    {skill.icon}
-                    <span className="ml-2">{skill.name}</span>
-                  </span>
-                ))}
-              </div>
-            </div>
-          </div>
+        </section>
 
-          {/* Footer/Summary */}
-          <div className="mt-8 pt-6 border-t border-gray-700 text-center">
-            <p className="text-gray-400 italic text-sm">
-              Trang web được thiết kế với sự chú trọng vào UI/UX và khả năng tương thích trên mọi thiết bị.
-            </p>
-          </div>
-        </div>
-      </div>
+        <!-- Phần Kỹ năng -->
+        <section class="bg-white p-6 rounded-xl profile-card mb-12">
+            <h2 class="text-3xl font-bold text-gray-900 mb-6 border-b pb-2 border-blue-200">Kỹ Năng Công Nghệ</h2>
+            <div class="flex flex-wrap gap-3">
+                <span class="skill-tag px-4 py-2 rounded-full text-sm font-medium">HTML5 & CSS3</span>
+                <span class="skill-tag px-4 py-2 rounded-full text-sm font-medium">JavaScript (ES6+)</span>
+                <span class="skill-tag px-4 py-2 rounded-full text-sm font-medium">Tailwind CSS</span>
+                <span class="skill-tag px-4 py-2 rounded-full text-sm font-medium">ReactJS (Cơ bản)</span>
+                <span class="skill-tag px-4 py-2 rounded-full text-sm font-medium">Node.js (Cơ bản)</span>
+                <span class="skill-tag px-4 py-2 rounded-full text-sm font-medium">C# / .NET (Đang học)</span>
+                <span class="skill-tag px-4 py-2 rounded-full text-sm font-medium">MySQL & MongoDB</span>
+                <span class="skill-tag px-4 py-2 rounded-full text-sm font-medium">Git & GitHub</span>
+            </div>
+        </section>
+
+        <!-- Phần Dự án (Placeholder) -->
+        <section class="bg-white p-6 rounded-xl profile-card mb-12">
+            <h2 class="text-3xl font-bold text-gray-900 mb-6 border-b pb-2 border-blue-200">Dự Án Nổi Bật</h2>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <!-- Dự án 1 -->
+                <div class="border border-blue-100 p-4 rounded-lg hover:border-blue-300 transition duration-300">
+                    <h3 class="text-xl font-semibold text-blue-600 mb-2">Website Thương mại Điện tử Đơn giản</h3>
+                    <p class="text-gray-600">Sử dụng HTML/CSS/JavaScript để mô phỏng trang mua sắm cơ bản với giỏ hàng. Tập trung vào tính đáp ứng (responsive design).</p>
+                    <span class="inline-block mt-3 text-sm font-medium text-blue-500">Công nghệ: HTML, CSS, JS</span>
+                </div>
+                <!-- Dự án 2 -->
+                <div class="border border-blue-100 p-4 rounded-lg hover:border-blue-300 transition duration-300">
+                    <h3 class="text-xl font-semibold text-blue-600 mb-2">Ứng dụng Ghi chú Cá nhân</h3>
+                    <p class="text-gray-600">Phát triển một ứng dụng ghi chú sử dụng React (hoặc framework/thư viện khác đang học) để quản lý state và component.</p>
+                    <span class="inline-block mt-3 text-sm font-medium text-blue-500">Công nghệ: React, Tailwind CSS</span>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Footer -->
+        <footer class="text-center text-gray-500 py-6 border-t mt-8">
+            <p>&copy; 2024 Trần Nguyễn Nguyên Vũ | Sinh viên FPT Polytechnic BMT</p>
+        </footer>
+
     </div>
-  );
-};
+    
+    <script>
+        // JavaScript cơ bản để thêm tương tác (nếu cần)
+        document.addEventListener('DOMContentLoaded', () => {
+            console.log("Trang Portfolio đã tải xong.");
+            
+            // Ví dụ: Thêm một hiệu ứng nhỏ cho thẻ profile khi tải
+            const profileCard = document.querySelector('.profile-card');
+            if (profileCard) {
+                profileCard.style.opacity = 0;
+                setTimeout(() => {
+                    profileCard.style.opacity = 1;
+                    profileCard.style.transition = 'opacity 1s ease-in-out';
+                }, 100);
+            }
 
-export default App;
+            // Thay đổi ảnh profile placeholder nếu bạn có ảnh thật
+            // Để sử dụng ảnh thật, bạn có thể thay đổi thuộc tính 'src' của thẻ img
+            // const profileImg = document.getElementById('profile-img');
+            // profileImg.src = 'duong_dan_den_anh_cua_ban.jpg';
+        });
+    </script>
+</body>
+</html>
