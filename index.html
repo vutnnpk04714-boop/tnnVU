@@ -1,168 +1,142 @@
-import React, { useState, useEffect, useCallback } from 'react';
-import { User, GraduationCap, MapPin, Code, Github, Facebook, Mail } from 'lucide-react';
+import React from 'react';
+import { Mail, Phone, MapPin, Briefcase, GraduationCap, Code } from 'lucide-react';
 
-// Dữ liệu cơ bản của sinh viên
-const initialProfile = {
-  name: 'Trần Nguyễn Nguyên Vũ',
-  studentId: 'PK04714',
-  school: 'FPT Polytechnic',
-  city: 'Thành phố Buôn Mê Thuột',
-  defaultImage: 'https://placehold.co/400x400/10b981/ffffff?text=PK04714', // Placeholder image with school color
-};
-
-// Component chính của ứng dụng
+// Define the main App component
 const App = () => {
-  // State để lưu trữ thông tin và URL ảnh đại diện
-  const [profile, setProfile] = useState(initialProfile);
-  const [profileImage, setProfileImage] = useState(profile.defaultImage);
-
-  // Khôi phục ảnh từ localStorage nếu có (dành cho demo, nhưng sẽ dùng lại defaultImage do giới hạn môi trường)
-  // Trong ứng dụng thực tế, bạn sẽ dùng Firebase Storage để lưu trữ ảnh
-  useEffect(() => {
-    // Thay vì dùng localStorage, ta sẽ giữ lại logic load ảnh tạm thời khi người dùng chọn.
-    // LƯU Ý: Trong môi trường thực tế, cần sử dụng Firebase Storage để lưu ảnh vĩnh viễn
-  }, []);
-
-  /**
-   * Hàm xử lý khi người dùng chọn file ảnh mới.
-   * Chuyển đổi file ảnh thành Data URL (Base64) để hiển thị ngay lập tức.
-   * @param {React.ChangeEvent<HTMLInputElement>} event
-   */
-  const handleImageUpload = (event) => {
-    const file = event.target.files[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        // Cập nhật state với Data URL mới
-        setProfileImage(reader.result);
-      };
-      reader.readAsDataURL(file);
+  // Static data for the profile
+  const profileData = {
+    name: "Trần Nguyễn Nguyên Vũ",
+    studentId: "PK04714",
+    school: "FPT Polytechnic",
+    location: "Thành phố Buôn Mê Thuật",
+    title: "Chuyên gia Phát triển Website (Web Developer)",
+    motto: "Học hỏi không ngừng, sáng tạo không giới hạn.",
+    image: "https://placehold.co/200x200/4c4c4c/ffffff?text=AVATAR", // Placeholder image
+    skills: [
+      { name: "ReactJS", icon: <Code className="w-5 h-5 text-sky-400" /> },
+      { name: "Tailwind CSS", icon: <Code className="w-5 h-5 text-teal-400" /> },
+      { name: "HTML & CSS", icon: <Code className="w-5 h-5 text-orange-400" /> },
+      { name: "JavaScript", icon: <Code className="w-5 h-5 text-yellow-400" /> },
+      { name: "UI/UX Design", icon: <Briefcase className="w-5 h-5 text-pink-400" /> },
+    ],
+    contact: {
+      email: "tranquyennguyenvu@example.com",
+      phone: "+84 123 456 789",
     }
   };
 
-  // Thông tin liên hệ mẫu
-  const contactInfo = [
-    { icon: <Mail className="w-5 h-5 text-gray-700 dark:text-gray-300" />, label: 'Email', value: 'vu.pk04714@fpt.edu.vn', href: 'mailto:vu.pk04714@fpt.edu.vn' },
-    { icon: <Github className="w-5 h-5 text-gray-700 dark:text-gray-300" />, label: 'GitHub', value: '@nguyenvu_dev', href: 'https://github.com/yourusername' },
-    { icon: <Facebook className="w-5 h-5 text-gray-700 dark:text-gray-300" />, label: 'Facebook', value: 'Trần Vũ', href: 'https://facebook.com/yourprofile' },
-  ];
-
-  // Component phụ cho mục thông tin
-  const InfoItem = ({ Icon, label, value }) => (
-    <div className="flex items-center space-x-3 p-3 bg-white dark:bg-gray-800 rounded-lg shadow-sm">
-      <Icon className="w-6 h-6 text-emerald-500" />
-      <div>
-        <p className="text-xs font-semibold uppercase text-gray-500 dark:text-gray-400">{label}</p>
-        <p className="text-base font-medium text-gray-900 dark:text-gray-100">{value}</p>
+  // Utility function for responsive icons (Optional, but good for style)
+  const IconText = ({ icon, text }) => (
+    <div className="flex items-center text-sm sm:text-base text-gray-300">
+      <div className="mr-3 p-2 bg-gray-700/50 rounded-full flex-shrink-0">
+        {icon}
       </div>
+      <span>{text}</span>
     </div>
   );
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-900 p-4 sm:p-8 flex items-center justify-center font-inter">
-      <div className="max-w-4xl w-full bg-white dark:bg-gray-800 rounded-3xl shadow-2xl overflow-hidden">
-        {/* Header - Banner Section */}
-        <div className="relative h-40 bg-gradient-to-r from-emerald-500 to-teal-600">
-          <div className="absolute inset-0 bg-pattern opacity-10"></div>
-          <h1 className="p-6 text-2xl font-bold text-white tracking-wider">
-            PK04714 - Portfolio
-          </h1>
+    <div className="min-h-screen bg-gray-900 flex items-center justify-center p-4 sm:p-8">
+      {/* Main Profile Card Container */}
+      <div className="w-full max-w-4xl bg-gray-800 shadow-2xl rounded-xl overflow-hidden transform transition duration-500 hover:scale-[1.01]">
+        
+        {/* Header Section (Banner/Background) */}
+        <div className="relative h-40 bg-gradient-to-r from-blue-700 to-teal-500">
+          <div className="absolute inset-0 bg-black opacity-30"></div>
+          {/* Motto/Quote */}
+          <div className="absolute bottom-4 left-4 text-white text-lg font-semibold italic p-2 rounded-lg">
+            "{profileData.motto}"
+          </div>
         </div>
 
-        {/* Main Content Area */}
-        <div className="p-4 sm:p-8 -mt-24">
+        {/* Profile Content Section */}
+        <div className="p-6 sm:p-8 pt-0">
           
-          {/* Profile Picture Card (Left/Top) */}
-          <div className="flex flex-col md:flex-row items-start space-y-6 md:space-y-0 md:space-x-8">
-            <div className="w-full md:w-64 flex flex-col items-center">
-              {/* Image Container */}
-              <div className="w-48 h-48 sm:w-56 sm:h-56 relative -mt-4 bg-white dark:bg-gray-800 p-1 rounded-full shadow-xl ring-4 ring-white dark:ring-gray-800 transition-all duration-300 hover:scale-[1.02]">
-                <img
-                  src={profileImage}
-                  alt="Ảnh đại diện"
-                  className="w-full h-full object-cover rounded-full"
-                  onError={(e) => { e.target.onerror = null; e.target.src = initialProfile.defaultImage; }} // Fallback if image fails to load
-                />
-              </div>
+          {/* Avatar and Main Info */}
+          <div className="flex flex-col md:flex-row items-center md:items-start -mt-20 md:-mt-16">
+            {/* Avatar */}
+            <img
+              src={profileData.image}
+              alt="Ảnh Profile"
+              className="w-32 h-32 object-cover rounded-full border-4 border-gray-800 shadow-xl mb-4 md:mb-0 md:mr-6 transition duration-300 hover:border-teal-400"
+              onError={(e) => { e.target.onerror = null; e.target.src = "https://placehold.co/200x200/4c4c4c/ffffff?text=AVATAR+ERR"; }}
+            />
 
-              {/* Upload Button */}
-              <label htmlFor="file-upload" className="mt-4 px-4 py-2 bg-emerald-500 text-white text-sm font-semibold rounded-full shadow-md hover:bg-emerald-600 transition-colors duration-200 cursor-pointer flex items-center space-x-2">
-                <Code className="w-4 h-4"/>
-                <span>Tải ảnh mới lên</span>
-              </label>
-              <input
-                id="file-upload"
-                type="file"
-                accept="image/*"
-                onChange={handleImageUpload}
-                className="hidden"
+            {/* Name and Title */}
+            <div className="text-center md:text-left pt-4 md:pt-0">
+              <h1 className="text-4xl sm:text-5xl font-extrabold text-white tracking-tight">
+                {profileData.name}
+              </h1>
+              <p className="text-xl sm:text-2xl text-teal-400 font-light mt-1">
+                {profileData.title}
+              </p>
+            </div>
+          </div>
+
+          {/* Details Grid (Responsive Layout) */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-8 border-t border-gray-700 pt-6">
+            
+            {/* Column 1: Core Details */}
+            <div className="md:col-span-1 space-y-4">
+              <h2 className="text-xl font-bold text-white mb-4 border-b border-gray-700 pb-2">
+                Thông Tin Cơ Bản
+              </h2>
+              <IconText
+                icon={<GraduationCap className="w-5 h-5 text-amber-400" />}
+                text={`Trường: ${profileData.school}`}
               />
+              <IconText
+                icon={<MapPin className="w-5 h-5 text-red-400" />}
+                text={`Địa điểm: ${profileData.location}`}
+              />
+              <IconText
+                icon={<Briefcase className="w-5 h-5 text-blue-400" />}
+                text={`MSSV: ${profileData.studentId}`}
+              />
+            </div>
 
-              {/* Social Media Links (Mobile/Tablet View) */}
-              <div className="md:hidden mt-6 w-full space-y-4">
-                <h2 className="text-xl font-bold text-gray-800 dark:text-white border-b pb-2">Liên hệ</h2>
-                {contactInfo.map((item, index) => (
-                  <a
+            {/* Column 2: Contact Info */}
+            <div className="md:col-span-1 space-y-4">
+              <h2 className="text-xl font-bold text-white mb-4 border-b border-gray-700 pb-2">
+                Liên Hệ
+              </h2>
+              <IconText
+                icon={<Mail className="w-5 h-5 text-indigo-400" />}
+                text={profileData.contact.email}
+              />
+              <IconText
+                icon={<Phone className="w-5 h-5 text-green-400" />}
+                text={profileData.contact.phone}
+              />
+              <p className="text-sm text-gray-500 pt-2">
+                Hãy liên hệ để thảo luận về các dự án hợp tác.
+              </p>
+            </div>
+
+            {/* Column 3: Skills/Expertise */}
+            <div className="md:col-span-1">
+              <h2 className="text-xl font-bold text-white mb-4 border-b border-gray-700 pb-2">
+                Kỹ Năng Nổi Bật
+              </h2>
+              <div className="flex flex-wrap gap-2">
+                {profileData.skills.map((skill, index) => (
+                  <span
                     key={index}
-                    href={item.href}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="flex items-center space-x-3 p-3 bg-gray-100 dark:bg-gray-700 rounded-lg shadow-sm hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors duration-200"
+                    className="flex items-center bg-gray-700 text-teal-300 text-xs font-medium px-3 py-1.5 rounded-full shadow-md hover:bg-teal-700 hover:text-white transition duration-300 cursor-default"
                   >
-                    {item.icon}
-                    <span className="text-sm font-medium text-gray-800 dark:text-gray-200 truncate">{item.value}</span>
-                  </a>
+                    {skill.icon}
+                    <span className="ml-2">{skill.name}</span>
+                  </span>
                 ))}
               </div>
             </div>
+          </div>
 
-            {/* Profile Details (Right/Bottom) */}
-            <div className="flex-1 w-full mt-8 md:mt-0">
-              <h1 className="text-3xl sm:text-4xl font-extrabold text-gray-900 dark:text-white leading-tight">
-                {profile.name}
-              </h1>
-              <p className="text-lg text-emerald-600 dark:text-emerald-400 font-semibold mb-6">
-                Sinh viên FPT Polytechnic - PK04714
-              </p>
-
-              {/* Personal Info Grid */}
-              <div className="space-y-6">
-                <h2 className="text-xl font-bold text-gray-800 dark:text-white border-b pb-2">Thông tin cá nhân</h2>
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                  <InfoItem Icon={User} label="Mã số sinh viên" value={profile.studentId} />
-                  <InfoItem Icon={GraduationCap} label="Trường" value={profile.school} />
-                  <InfoItem Icon={MapPin} label="Nơi học tập" value={profile.city} />
-                  <InfoItem Icon={Code} label="Chuyên ngành" value="Phát triển Website" />
-                </div>
-              </div>
-
-              {/* Contact/Social Media (Desktop View) */}
-              <div className="mt-8 hidden md:block">
-                <h2 className="text-xl font-bold text-gray-800 dark:text-white border-b pb-2">Liên hệ & Mạng xã hội</h2>
-                <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 mt-4">
-                  {contactInfo.map((item, index) => (
-                    <a
-                      key={index}
-                      href={item.href}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="flex items-center space-x-3 p-3 bg-gray-100 dark:bg-gray-700 rounded-lg shadow-sm hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors duration-200"
-                    >
-                      {item.icon}
-                      <span className="text-sm font-medium text-gray-800 dark:text-gray-200 truncate">{item.value}</span>
-                    </a>
-                  ))}
-                </div>
-              </div>
-              
-              {/* About Section */}
-              <div className="mt-8">
-                <h2 className="text-xl font-bold text-gray-800 dark:text-white border-b pb-2">Mục tiêu phát triển</h2>
-                <p className="mt-4 text-gray-600 dark:text-gray-300 leading-relaxed">
-                  Hiện đang là sinh viên chuyên ngành Phát triển Website tại FPT Polytechnic Buôn Mê Thuột. Mục tiêu là trở thành một lập trình viên Full-stack có kiến thức vững chắc về các công nghệ hiện đại như React, Node.js, và nắm bắt tốt các nguyên tắc thiết kế UI/UX để tạo ra các ứng dụng chất lượng cao, thân thiện với người dùng.
-                </p>
-              </div>
-            </div>
+          {/* Footer/Summary */}
+          <div className="mt-8 pt-6 border-t border-gray-700 text-center">
+            <p className="text-gray-400 italic text-sm">
+              Trang web được thiết kế với sự chú trọng vào UI/UX và khả năng tương thích trên mọi thiết bị.
+            </p>
           </div>
         </div>
       </div>
